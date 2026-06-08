@@ -154,12 +154,28 @@
       background: var(--blush);
       outline: none;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
 
     .volume-slider::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 14px; height: 14px;
+      width: 12px; height: 12px;
       border-radius: 50%;
+      background: var(--wine);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 0 0 3px rgba(217, 107, 16, 0.12);
+    }
+
+    .volume-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+      box-shadow: 0 0 0 5px rgba(217, 107, 16, 0.18);
+    }
+
+    .volume-slider::-moz-range-thumb {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      border: none;
       background: var(--wine);
       cursor: pointer;
     }
@@ -560,8 +576,15 @@
 
   function setVolume(v) {
     ambientVolume = parseInt(v);
+    updateSliderFill();
     updateScopeLabel();
     renderPosts();
+  }
+
+  function updateSliderFill() {
+    const slider = document.getElementById('volume-slider');
+    const pct = (ambientVolume / 5) * 100;
+    slider.style.background = `linear-gradient(to right, var(--wine) ${pct}%, var(--blush) ${pct}%)`;
   }
 
   function updateScopeLabel() {}
@@ -692,6 +715,7 @@
     fab.classList.add('cooldown');
   }
 
+  updateSliderFill();
   updateScopeLabel();
   renderPosts();
 </script>

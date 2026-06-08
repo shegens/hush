@@ -381,9 +381,9 @@
 <div class="sheet-overlay" id="overlay" onclick="closeSheet()"></div>
 <div class="sheet" id="sheet">
   <div class="sheet-handle"></div>
-  <textarea id="compose-input" placeholder="Say something worth waiting for…" maxlength="500" oninput="updateCount()"></textarea>
+  <textarea id="compose-input" placeholder="Say something worth waiting for…" maxlength="999" oninput="updateCount()"></textarea>
   <div class="sheet-footer">
-    <span class="char-count" id="char-count">500</span>
+    <span class="char-count" id="char-count">999</span>
     <button class="submit-btn" onclick="submitPost()">post</button>
   </div>
 </div>
@@ -512,10 +512,29 @@
 
   function updateCount() {
     const input = document.getElementById('compose-input');
-    const rem = 500 - input.value.length;
+    const rem = 999 - input.value.length;
     const el = document.getElementById('char-count');
     el.textContent = rem;
     el.classList.toggle('over', rem < 20);
+
+    // Insert line break after every 333 chars of a paragraph (soft wrap hint)
+    let v = input.value;
+    // Split on existing newlines, enforce max 333 per segment
+    const lines = v.split('\n');
+    const wrapped = lines.map(line => {
+      if (line.length <= 333) return line;
+      let out = '';
+      for (let i = 0; i < line.length; i += 333) {
+        out += (i > 0 ? '\n' : '') + line.slice(i, i + 333);
+      }
+      return out;
+    });
+    const newVal = wrapped.join('\n');
+    if (newVal !== v) {
+      const pos = input.selectionStart + (newVal.length - v.length);
+      input.value = newVal;
+      input.setSelectionRange(pos, pos);
+    }
   }
 
   function submitPost() {

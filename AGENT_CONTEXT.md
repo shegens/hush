@@ -69,6 +69,12 @@ Lens Protocol (ZKsync L2). `HushFeedRule.sol` ready for deployment. Gas sponsore
 - Foundry config: Lens RPC endpoints in `contracts/foundry.toml`
 
 ## TODO
+- [ ] **Waitlist system**
+  - Para login creates account, auto-inserts as `pending`
+  - Alex greenlists addresses → `approved`
+  - `pending` users: read-only (feed visible, no speak/hear/tune in)
+  - Admin route (`/admin`) — wallet-authed, shows pending list, approve button
+  - DB: `users` table — `address`, `status` (pending|approved), `created_at`
 - [ ] **PWA** (after platform built out)
   - Service worker + manifest
   - Push notification when cooldown hits 0 ("you can speak again")

@@ -220,7 +220,7 @@
     .decibels .bar:nth-child(3) { width: 3px; height: 15px; border-radius: 2px; }
     .decibels .bar:nth-child(4) { width: 3px; height: 20px; border-radius: 2px; }
 
-    /* unvoted: shaded bars = orange-wine, unshaded = light blush */
+    /* unheard: shaded bars = orange-wine, unshaded = light blush */
     .decibels .bar            { background: var(--blush-light); transition: background 0.15s; }
     .decibels[data-level="0"] .bar                    { background: var(--blush-light); }
     .decibels[data-level="1"] .bar:nth-child(1)       { background: var(--wine); }
@@ -228,15 +228,15 @@
     .decibels[data-level="3"] .bar:nth-child(-n+3)    { background: var(--wine); }
     .decibels[data-level="4"] .bar                    { background: var(--wine); }
 
-    /* voted: shaded bars = pink, unshaded = light pink */
-    .decibels.voted .bar                              { background: #FADADD; }
-    .decibels.voted[data-level="1"] .bar:nth-child(1)    { background: #F06090; }
-    .decibels.voted[data-level="2"] .bar:nth-child(-n+2) { background: #F06090; }
-    .decibels.voted[data-level="3"] .bar:nth-child(-n+3) { background: #F06090; }
-    .decibels.voted[data-level="4"] .bar                 { background: #F06090; }
+    /* heard: shaded bars = pink, unshaded = light pink */
+    .decibels.heard .bar                              { background: #FADADD; }
+    .decibels.heard[data-level="1"] .bar:nth-child(1)    { background: #F06090; }
+    .decibels.heard[data-level="2"] .bar:nth-child(-n+2) { background: #F06090; }
+    .decibels.heard[data-level="3"] .bar:nth-child(-n+3) { background: #F06090; }
+    .decibels.heard[data-level="4"] .bar                 { background: #F06090; }
 
-    /* hover: nudge toward voted state preview */
-    .decibels:not(.voted):hover .bar { background: #F5C0CC; }
+    /* hover: nudge toward heard state preview */
+    .decibels:not(.heard):hover .bar { background: #F5C0CC; }
 
     /* ── COMPOSE BUTTON (FAB) ────────────────── */
     .fab {
@@ -392,7 +392,7 @@
       time: "4h ago",
       body: "The light in January is thin and honest. It doesn't flatter anything — not the buildings, not the people. But it's the only light that feels true.",
       decibels: 1200,
-      voted: false,
+      heard: false,
       ts: Date.now() - 4 * 3600000
     },
     {
@@ -402,7 +402,7 @@
       time: "7h ago",
       body: "Every club has a Tuesday night when it reveals its real self. No dress code, no hype, just whoever actually loves the music. That's the night you want.",
       decibels: 84,
-      voted: false,
+      heard: false,
       ts: Date.now() - 7 * 3600000
     },
     {
@@ -412,7 +412,7 @@
       time: "9h ago",
       body: "She wore the same earrings to three events in a row and somehow each time they meant something different. That's not a wardrobe. That's a language.",
       decibels: 7,
-      voted: true,
+      heard: true,
       ts: Date.now() - 9 * 3600000
     },
     {
@@ -422,7 +422,7 @@
       time: "11h ago",
       body: "A restaurant that serves only one thing perfectly is making a statement about patience. You either believe in it or you don't.",
       decibels: 430,
-      voted: false,
+      heard: false,
       ts: Date.now() - 11 * 3600000
     },
     {
@@ -432,7 +432,7 @@
       time: "1d ago",
       body: "Borrowed a friend's apartment for a week. The hardest part was learning which silence was restful and which was just empty.",
       decibels: 0,
-      voted: false,
+      heard: false,
       ts: Date.now() - 26 * 3600000
     },
     {
@@ -442,7 +442,7 @@
       time: "2d ago",
       body: "There's a particular kind of restaurant that exists only in the imagination of people who've never had to run one. Everything is sourced locally, the menu changes daily, the staff are paid fairly, the space is beautiful, and somehow it's also affordable. People describe this place like it's obvious. Like the math just works if you care enough. I've eaten at enough places to know the math never works. Something always gives. Usually it's the staff. Sometimes it's the sourcing. Occasionally it's the owner's savings. The restaurants I trust most are the ones that've clearly made a choice about what they're willing to compromise on — and own it.",
       decibels: 4,
-      voted: false,
+      heard: false,
       ts: Date.now() - 48 * 3600000
     },
   ];
@@ -482,7 +482,7 @@
         </div>
         <div class="post-body">${bodyText}${moreBtn}</div>
         <div class="post-footer">
-          <div class="decibels ${p.voted ? 'voted' : ''}" data-level="${dbLevel(p.decibels)}" data-id="${p.id}" onclick="toggleVote(${p.id})">
+          <div class="decibels ${p.heard ? 'heard' : ''}" data-level="${dbLevel(p.decibels)}" data-id="${p.id}" onclick="toggleHeard(${p.id})">
             <div class="bar"></div>
             <div class="bar"></div>
             <div class="bar"></div>
@@ -498,11 +498,11 @@
     if (p) { p.expanded = true; renderPosts(); }
   }
 
-  function toggleVote(id) {
+  function toggleHeard(id) {
     const p = POSTS.find(x => x.id === id);
     if (!p) return;
-    p.voted = !p.voted;
-    p.decibels += p.voted ? 1 : -1;
+    p.heard = !p.heard;
+    p.decibels += p.heard ? 1 : -1;
     renderPosts();
   }
 
@@ -544,7 +544,7 @@
       time: "just now",
       body: text,
       decibels: 0,
-      voted: false,
+      heard: false,
       ts: Date.now()
     });
     input.value = '';

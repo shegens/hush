@@ -168,18 +168,25 @@
 </div>
 
 <script>
-  // preview: faint = unheard bars bg, hover = hover state, active = heard bars + button
+  // One color per family. Opacity handles unheard (0.2) → hover (0.5) → heard (1.0)
   const PREVIEW = [
-    { name: 'dusty rose',      faint:'#FAE4E4', hover:'#F2C4C4', active:'#C86870', desc:'muted, vintage' },
-    { name: 'petal',           faint:'#FCDDD8', hover:'#F5C0B8', active:'#C87068', desc:'warm blush, slight peach' },
-    { name: 'old rose',        faint:'#F8D8D4', hover:'#EDB4AE', active:'#C06860', desc:'antique warmth, earthy' },
-    { name: 'soft coral-pink', faint:'#FADADC', hover:'#F0AEAD', active:'#C86868', desc:'warm, not orange' },
-    { name: 'tea rose',        faint:'#FCDCD8', hover:'#F4B8B0', active:'#C87068', desc:'warm, peachy undertone' },
-    { name: 'ballet slipper',  faint:'#FAE8E8', hover:'#EEC8C8', active:'#C87878', desc:'pale, classic blush' },
-    { name: 'faded carnation', faint:'#FADADC', hover:'#F0B4BE', active:'#C87080', desc:'warm carnation, muted' },
-    { name: 'antique blush',   faint:'#F8D8DC', hover:'#E8B4B8', active:'#C07078', desc:'deeper, still warm' },
-    { name: 'warm carnation',  faint:'#FCDCD8', hover:'#F2BCB0', active:'#CC7065', desc:'red-pink warmth, no cool' },
+    { name: 'dusty rose',      color:'#C86870', desc:'muted, vintage' },
+    { name: 'petal',           color:'#C87060', desc:'warm blush, slight peach' },
+    { name: 'old rose',        color:'#C06858', desc:'antique warmth, earthy' },
+    { name: 'soft coral-pink', color:'#C86060', desc:'warm, not orange' },
+    { name: 'tea rose',        color:'#C87060', desc:'warm, peachy undertone' },
+    { name: 'ballet slipper',  color:'#C87878', desc:'pale, classic blush' },
+    { name: 'faded carnation', color:'#C86878', desc:'warm carnation, muted' },
+    { name: 'antique blush',   color:'#B86870', desc:'deeper, still warm' },
+    { name: 'warm carnation',  color:'#CC6858', desc:'red-pink warmth, no cool' },
   ];
+
+  function bars(color, opacity, level) {
+    const heights = [6, 10, 15, 20];
+    return heights.map((h, i) =>
+      `<div class="b" style="height:${h}px;background:${color};opacity:${i < level ? opacity : 0.18}"></div>`
+    ).join('');
+  }
 
   const previewContainer = document.getElementById('swatches-preview');
   PREVIEW.forEach(p => {
@@ -187,34 +194,22 @@
     div.className = 'swatch';
     div.style.flexDirection = 'column';
     div.style.alignItems = 'flex-start';
-    div.style.gap = '0.6rem';
+    div.style.gap = '0.75rem';
     div.innerHTML = `
-      <div style="font-size:0.8rem;font-weight:600;color:var(--text)">${p.name}</div>
-      <div style="font-size:0.68rem;color:var(--muted);margin-top:-4px">${p.desc}</div>
+      <div style="display:flex;align-items:baseline;gap:0.5rem">
+        <div style="font-size:0.8rem;font-weight:600;color:var(--text)">${p.name}</div>
+        <div style="font-size:0.65rem;font-family:monospace;color:var(--muted)">${p.color}</div>
+      </div>
+      <div style="font-size:0.68rem;color:var(--muted);margin-top:-8px">${p.desc}</div>
       <div class="demo-row">
         <span class="demo-heard-label">unheard</span>
-        <div class="demo-bars">
-          <div class="b" style="height:6px;background:#F9C49A"></div>
-          <div class="b" style="height:10px;background:#F9C49A"></div>
-          <div class="b" style="height:15px;background:#F9C49A"></div>
-          <div class="b" style="height:20px;background:#F9C49A"></div>
-        </div>
-        <span class="demo-heard-label" style="margin-left:1.5rem">hover</span>
-        <div class="demo-bars">
-          <div class="b" style="height:6px;background:${p.hover}"></div>
-          <div class="b" style="height:10px;background:${p.hover}"></div>
-          <div class="b" style="height:15px;background:${p.hover}"></div>
-          <div class="b" style="height:20px;background:${p.hover}"></div>
-        </div>
-        <span class="demo-heard-label" style="margin-left:1.5rem">heard</span>
-        <div class="demo-bars">
-          <div class="b" style="height:6px;background:${p.faint}"></div>
-          <div class="b" style="height:10px;background:${p.faint}"></div>
-          <div class="b" style="height:15px;background:${p.active}"></div>
-          <div class="b" style="height:20px;background:${p.active}"></div>
-        </div>
-        <button class="demo-btn" style="margin-left:1.5rem;background:${p.active};color:#fff">tune in</button>
-        <button class="demo-btn" style="margin-left:0.5rem;background:transparent;color:${p.active};border:1px solid ${p.faint}">tuned</button>
+        <div class="demo-bars">${bars(p.color, 0.18, 3)}</div>
+        <span class="demo-heard-label" style="margin-left:1.25rem">hover</span>
+        <div class="demo-bars">${bars(p.color, 0.5, 3)}</div>
+        <span class="demo-heard-label" style="margin-left:1.25rem">heard</span>
+        <div class="demo-bars">${bars(p.color, 1, 3)}</div>
+        <button class="demo-btn" style="margin-left:1.25rem;background:${p.color};color:#fff;opacity:1">tune in</button>
+        <button class="demo-btn" style="margin-left:0.5rem;background:transparent;color:${p.color};border:1px solid ${p.color};opacity:0.7">tuned</button>
       </div>
     `;
     previewContainer.appendChild(div);

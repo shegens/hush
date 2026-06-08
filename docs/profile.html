@@ -18,7 +18,7 @@
       --wine-pale:   rgba(215, 120, 40, 0.15);
       --text:        #221206;
       --text-muted:  #8C5828;
-      --link-hover:  #D96070;
+      --link-hover:  #F46080;
     }
 
     body {
@@ -332,13 +332,13 @@
     .decibels[data-level="3"] .bar:nth-child(-n+3)    { background: var(--wine); }
     .decibels[data-level="4"] .bar                    { background: var(--wine); }
 
-    .decibels.heard .bar                              { background: #FDDDE6; }
-    .decibels.heard[data-level="1"] .bar:nth-child(1)    { background: #E05878; }
-    .decibels.heard[data-level="2"] .bar:nth-child(-n+2) { background: #E05878; }
-    .decibels.heard[data-level="3"] .bar:nth-child(-n+3) { background: #E05878; }
-    .decibels.heard[data-level="4"] .bar                 { background: #E05878; }
+    .decibels.heard .bar                              { background: #F46080; opacity: 1; }
+    .decibels.heard[data-level="1"] .bar:nth-child(1)    { background: #F46080; }
+    .decibels.heard[data-level="2"] .bar:nth-child(-n+2) { background: #F46080; }
+    .decibels.heard[data-level="3"] .bar:nth-child(-n+3) { background: #F46080; }
+    .decibels.heard[data-level="4"] .bar                 { background: #F46080; }
 
-    .decibels:not(.heard):hover .bar { background: #F9C4D0; }
+    .decibels:not(.heard):hover .bar { background: #F46080; opacity: 0.5; }
 
     .read-more {
       display: inline;

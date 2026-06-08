@@ -180,7 +180,23 @@
       font-size: 0.975rem;
       line-height: 1.65;
       color: var(--text);
+      white-space: pre-wrap;
     }
+
+    .read-more {
+      display: inline;
+      background: none;
+      border: none;
+      padding: 0;
+      margin-left: 0.25em;
+      font-family: system-ui;
+      font-size: 0.78rem;
+      color: var(--wine-light);
+      cursor: pointer;
+      letter-spacing: 0.02em;
+    }
+
+    .read-more:hover { text-decoration: underline; }
 
     .post-footer {
       margin-top: 0.85rem;
@@ -440,6 +456,16 @@
       voted: true,
       ts: Date.now() - 26 * 3600000
     },
+    {
+      id: 6,
+      handle: "@celeste",
+      avatarClass: "cream",
+      time: "2d ago",
+      body: "There's a particular kind of restaurant that exists only in the imagination of people who've never had to run one. Everything is sourced locally, the menu changes daily, the staff are paid fairly, the space is beautiful, and somehow it's also affordable. People describe this place like it's obvious. Like the math just works if you care enough. I've eaten at enough places to know the math never works. Something always gives. Usually it's the staff. Sometimes it's the sourcing. Occasionally it's the owner's savings. The restaurants I trust most are the ones that've clearly made a choice about what they're willing to compromise on — and own it.",
+      decibels: 4,
+      voted: false,
+      ts: Date.now() - 48 * 3600000
+    },
   ];
 
   let sortMode = 'chron';
@@ -460,7 +486,14 @@
       sortMode === 'chron' ? b.ts - a.ts : b.decibels - a.decibels
     );
 
-    document.getElementById('feed').innerHTML = sorted.map(p => `
+    document.getElementById('feed').innerHTML = sorted.map(p => {
+      const FOLD = 333;
+      const folded = p.body.length > FOLD && !p.expanded;
+      const bodyText = folded ? p.body.slice(0, FOLD).trimEnd() : p.body;
+      const moreBtn = folded
+        ? `<button class="read-more" onclick="expandPost(${p.id})">… read more</button>`
+        : '';
+      return `
       <div class="post">
         <div class="post-header">
           <div class="post-avatar ${p.avatarClass}"></div>
@@ -469,7 +502,7 @@
             <div class="post-time">${p.time}</div>
           </div>
         </div>
-        <div class="post-body">${p.body}</div>
+        <div class="post-body">${bodyText}${moreBtn}</div>
         <div class="post-footer">
           <div class="decibels ${p.voted ? 'voted' : ''}" data-level="${dbLevel(p.decibels)}" data-id="${p.id}" onclick="toggleVote(${p.id})">
             <div class="bar"></div>
@@ -480,7 +513,12 @@
           </div>
         </div>
       </div>
-    `).join('');
+    `}).join('');
+  }
+
+  function expandPost(id) {
+    const p = POSTS.find(x => x.id === id);
+    if (p) { p.expanded = true; renderPosts(); }
   }
 
   function toggleVote(id) {
@@ -516,25 +554,6 @@
     const el = document.getElementById('char-count');
     el.textContent = rem;
     el.classList.toggle('over', rem < 20);
-
-    // Insert line break after every 333 chars of a paragraph (soft wrap hint)
-    let v = input.value;
-    // Split on existing newlines, enforce max 333 per segment
-    const lines = v.split('\n');
-    const wrapped = lines.map(line => {
-      if (line.length <= 333) return line;
-      let out = '';
-      for (let i = 0; i < line.length; i += 333) {
-        out += (i > 0 ? '\n' : '') + line.slice(i, i + 333);
-      }
-      return out;
-    });
-    const newVal = wrapped.join('\n');
-    if (newVal !== v) {
-      const pos = input.selectionStart + (newVal.length - v.length);
-      input.value = newVal;
-      input.setSelectionRange(pos, pos);
-    }
   }
 
   function submitPost() {

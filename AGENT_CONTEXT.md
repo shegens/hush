@@ -15,8 +15,8 @@ Pages: https://shegens.github.io/hush/
 ## Stack
 - Smart contracts: Solidity + Foundry (`contracts/`)
 - Frontend: Next.js + Tailwind (`apps/web/`)
-- Auth: Lens account (wallet-based)
-- Storage: Lens Storage Nodes
+- Auth: **Para** (getpara.com) — embedded wallet + SIWE, no gas, supports email/social onboarding
+- Storage: Lens Storage Nodes (future)
 - DB: Postgres — off-chain decibels (`packages/db/schema.sql`)
 
 ## Design

@@ -195,6 +195,17 @@
       gap: 1px;
     }
 
+    /* ── DAY DIVIDER ─────────────────────────── */
+    .day-divider {
+      font-size: 0.65rem;
+      font-family: system-ui;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 1rem 0 0.25rem;
+      opacity: 0.6;
+    }
+
     /* ── POST CARD ───────────────────────────── */
     .post {
       background: var(--cream);
@@ -437,7 +448,7 @@
   <span class="sort-label">sort by</span>
   <div class="toggle-group">
     <button class="toggle-btn active" id="btn-chron" onclick="setSort('chron')">time</button>
-    <button class="toggle-btn"        id="btn-db"    onclick="setSort('db')">decibels</button>
+    <button class="toggle-btn"        id="btn-db"    onclick="setSort('db')">volume</button>
   </div>
 </div>
 
@@ -564,18 +575,36 @@
   }
 
   function renderPosts() {
-    const sorted = [...POSTS].sort((a, b) =>
-      sortMode === 'chron' ? b.ts - a.ts : b.decibels - a.decibels
-    );
+    let sorted;
+    if (sortMode === 'chron') {
+      sorted = [...POSTS].sort((a, b) => b.ts - a.ts);
+    } else {
+      // Group into 24h buckets (day 0 = most recent), sort each bucket by decibels
+      const now = Date.now();
+      const DAY = 86400000;
+      const withBucket = POSTS.map(p => ({
+        ...p,
+        bucket: Math.floor((now - p.ts) / DAY)
+      }));
+      withBucket.sort((a, b) => a.bucket - b.bucket || b.decibels - a.decibels);
+      sorted = withBucket;
+    }
 
+    let lastBucket = -1;
     document.getElementById('feed').innerHTML = sorted.map(p => {
+      let divider = '';
+      if (sortMode === 'db' && p.bucket !== lastBucket) {
+        lastBucket = p.bucket;
+        const label = p.bucket === 0 ? 'today' : p.bucket === 1 ? 'yesterday' : `${p.bucket} days ago`;
+        divider = `<div class="day-divider">${label}</div>`;
+      }
       const FOLD = 333;
       const folded = p.body.length > FOLD && !p.expanded;
       const bodyText = folded ? p.body.slice(0, FOLD).trimEnd() : p.body;
       const moreBtn = folded
         ? `<button class="read-more" onclick="expandPost(${p.id})">… read more</button>`
         : '';
-      return `
+      return divider + `
       <div class="post">
         <div class="post-header">
           <div class="post-avatar ${p.avatarClass}"></div>

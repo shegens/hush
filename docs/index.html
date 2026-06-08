@@ -441,7 +441,7 @@
     <span class="volume-icon">🔈</span>
     <input type="range" class="volume-slider" id="volume-slider" min="0" max="5" value="0" step="1" oninput="setVolume(this.value)">
     <span class="volume-icon">🔊</span>
-    <span class="scope-label" id="scope-label"></span>
+
   </div>
 </div>
 
@@ -543,9 +543,7 @@
     renderPosts();
   }
 
-  function updateScopeLabel() {
-    document.getElementById('scope-label').textContent = SCOPE_LABELS[ambientVolume];
-  }
+  function updateScopeLabel() {}
 
   function dbLevel(n) {
     if (n === 0)    return 0;

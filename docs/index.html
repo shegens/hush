@@ -124,55 +124,14 @@
       min-height: 32px;
     }
 
-    .ambient-toggle {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    /* pill switch */
-    .switch {
-      position: relative;
-      width: 32px;
-      height: 18px;
-      flex-shrink: 0;
-    }
-
-    .switch input { display: none; }
-
-    .switch-track {
-      position: absolute;
-      inset: 0;
-      background: var(--blush-light);
-      border-radius: 9px;
-      transition: background 0.2s;
-    }
-
-    .switch input:checked + .switch-track { background: var(--wine); }
-
-    .switch-thumb {
-      position: absolute;
-      top: 2px; left: 2px;
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: #fff;
-      transition: transform 0.2s;
-      pointer-events: none;
-    }
-
-    .switch input:checked ~ .switch-thumb { transform: translateX(14px); }
-
     .ambient-label {
       font-size: 0.72rem;
       font-family: system-ui;
       color: var(--text-muted);
       letter-spacing: 0.05em;
       text-transform: uppercase;
+      flex-shrink: 0;
     }
-
-    .ambient-label.on { color: var(--wine); }
 
     .volume-wrap {
       display: flex;
@@ -477,17 +436,10 @@
 </div>
 
 <div class="ambient-bar">
-  <label class="ambient-toggle">
-    <div class="switch">
-      <input type="checkbox" id="ambient-toggle" onchange="toggleAmbient()">
-      <div class="switch-track"></div>
-      <div class="switch-thumb"></div>
-    </div>
-    <span class="ambient-label" id="ambient-label">ambient noise</span>
-  </label>
-  <div class="volume-wrap" id="volume-wrap">
+  <span class="ambient-label">ambient noise</span>
+  <div class="volume-wrap visible">
     <span class="volume-icon">🔈</span>
-    <input type="range" class="volume-slider" id="volume-slider" min="0" max="5" value="1" step="1" oninput="setVolume(this.value)">
+    <input type="range" class="volume-slider" id="volume-slider" min="0" max="5" value="0" step="1" oninput="setVolume(this.value)">
     <span class="volume-icon">🔊</span>
     <span class="scope-label" id="scope-label"></span>
   </div>
@@ -574,27 +526,16 @@
   let sortMode = 'chron';
   let nextId = 100;
   const hasCooldown = false;
-  let ambientOn = false;
-  let ambientVolume = 1;
+  let ambientVolume = 0;
 
   const SCOPE_LABELS = [
-    '',
+    'your feed',
     'mutuals of mutuals',
     'people your mutuals follow',
     'people you follow (+ their follows)',
     'one more ring out',
     'everyone'
   ];
-
-  function toggleAmbient() {
-    ambientOn = document.getElementById('ambient-toggle').checked;
-    const wrap = document.getElementById('volume-wrap');
-    const lbl  = document.getElementById('ambient-label');
-    wrap.classList.toggle('visible', ambientOn);
-    lbl.classList.toggle('on', ambientOn);
-    updateScopeLabel();
-    renderPosts();
-  }
 
   function setVolume(v) {
     ambientVolume = parseInt(v);
@@ -603,8 +544,7 @@
   }
 
   function updateScopeLabel() {
-    document.getElementById('scope-label').textContent =
-      ambientOn ? SCOPE_LABELS[ambientVolume] : '';
+    document.getElementById('scope-label').textContent = SCOPE_LABELS[ambientVolume];
   }
 
   function dbLevel(n) {
@@ -715,6 +655,7 @@
     fab.classList.add('cooldown');
   }
 
+  updateScopeLabel();
   renderPosts();
 </script>
 </body>

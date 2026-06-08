@@ -209,55 +209,34 @@
     .decibels {
       display: flex;
       align-items: flex-end;
-      gap: 2px;
+      gap: 3px;
       cursor: pointer;
       padding: 4px 0;
     }
 
-    .decibels .bar {
-      width: 3px;
-      border-radius: 2px;
-      background: var(--blush);
-      transition: background 0.2s, height 0.2s;
-    }
+    /* 4 bars, ascending heights */
+    .decibels .bar:nth-child(1) { width: 3px; height: 6px;  border-radius: 2px; }
+    .decibels .bar:nth-child(2) { width: 3px; height: 10px; border-radius: 2px; }
+    .decibels .bar:nth-child(3) { width: 3px; height: 15px; border-radius: 2px; }
+    .decibels .bar:nth-child(4) { width: 3px; height: 20px; border-radius: 2px; }
 
-    .decibels:hover .bar,
-    .decibels.voted .bar {
-      background: var(--wine-light);
-    }
+    /* unvoted: shaded bars = orange-wine, unshaded = light blush */
+    .decibels .bar            { background: var(--blush-light); transition: background 0.15s; }
+    .decibels[data-level="0"] .bar                    { background: var(--blush-light); }
+    .decibels[data-level="1"] .bar:nth-child(1)       { background: var(--wine); }
+    .decibels[data-level="2"] .bar:nth-child(-n+2)    { background: var(--wine); }
+    .decibels[data-level="3"] .bar:nth-child(-n+3)    { background: var(--wine); }
+    .decibels[data-level="4"] .bar                    { background: var(--wine); }
 
-    /* bar heights encode rough magnitude without showing exact number */
-    .decibels[data-level="0"] .bar { height: 4px; }
+    /* voted: shaded bars = pink, unshaded = light pink */
+    .decibels.voted .bar                              { background: #FADADD; }
+    .decibels.voted[data-level="1"] .bar:nth-child(1)    { background: #F06090; }
+    .decibels.voted[data-level="2"] .bar:nth-child(-n+2) { background: #F06090; }
+    .decibels.voted[data-level="3"] .bar:nth-child(-n+3) { background: #F06090; }
+    .decibels.voted[data-level="4"] .bar                 { background: #F06090; }
 
-    .decibels[data-level="1"] .bar:nth-child(1) { height: 4px; }
-    .decibels[data-level="1"] .bar:nth-child(2) { height: 7px; }
-    .decibels[data-level="1"] .bar:nth-child(3) { height: 4px; }
-    .decibels[data-level="1"] .bar:nth-child(4) { height: 4px; }
-    .decibels[data-level="1"] .bar:nth-child(5) { height: 4px; }
-
-    .decibels[data-level="2"] .bar:nth-child(1) { height: 5px; }
-    .decibels[data-level="2"] .bar:nth-child(2) { height: 9px; }
-    .decibels[data-level="2"] .bar:nth-child(3) { height: 12px; }
-    .decibels[data-level="2"] .bar:nth-child(4) { height: 8px; }
-    .decibels[data-level="2"] .bar:nth-child(5) { height: 5px; }
-
-    .decibels[data-level="3"] .bar:nth-child(1) { height: 7px; }
-    .decibels[data-level="3"] .bar:nth-child(2) { height: 13px; }
-    .decibels[data-level="3"] .bar:nth-child(3) { height: 18px; }
-    .decibels[data-level="3"] .bar:nth-child(4) { height: 13px; }
-    .decibels[data-level="3"] .bar:nth-child(5) { height: 7px; }
-
-    .decibels[data-level="4"] .bar:nth-child(1) { height: 9px; }
-    .decibels[data-level="4"] .bar:nth-child(2) { height: 16px; }
-    .decibels[data-level="4"] .bar:nth-child(3) { height: 22px; }
-    .decibels[data-level="4"] .bar:nth-child(4) { height: 16px; }
-    .decibels[data-level="4"] .bar:nth-child(5) { height: 9px; }
-
-    .decibels[data-level="5"] .bar:nth-child(1) { height: 11px; }
-    .decibels[data-level="5"] .bar:nth-child(2) { height: 18px; }
-    .decibels[data-level="5"] .bar:nth-child(3) { height: 26px; }
-    .decibels[data-level="5"] .bar:nth-child(4) { height: 18px; }
-    .decibels[data-level="5"] .bar:nth-child(5) { height: 11px; }
+    /* hover: nudge toward voted state preview */
+    .decibels:not(.voted):hover .bar { background: #F5C0CC; }
 
     /* ── COMPOSE BUTTON (FAB) ────────────────── */
     .fab {
@@ -412,7 +391,7 @@
       avatarClass: "cream",
       time: "4h ago",
       body: "The light in January is thin and honest. It doesn't flatter anything — not the buildings, not the people. But it's the only light that feels true.",
-      decibels: 5,
+      decibels: 1200,
       voted: false,
       ts: Date.now() - 4 * 3600000
     },
@@ -422,7 +401,7 @@
       avatarClass: "wine",
       time: "7h ago",
       body: "Every club has a Tuesday night when it reveals its real self. No dress code, no hype, just whoever actually loves the music. That's the night you want.",
-      decibels: 4,
+      decibels: 84,
       voted: false,
       ts: Date.now() - 7 * 3600000
     },
@@ -432,8 +411,8 @@
       avatarClass: "blush",
       time: "9h ago",
       body: "She wore the same earrings to three events in a row and somehow each time they meant something different. That's not a wardrobe. That's a language.",
-      decibels: 3,
-      voted: false,
+      decibels: 7,
+      voted: true,
       ts: Date.now() - 9 * 3600000
     },
     {
@@ -442,7 +421,7 @@
       avatarClass: "cream",
       time: "11h ago",
       body: "A restaurant that serves only one thing perfectly is making a statement about patience. You either believe in it or you don't.",
-      decibels: 5,
+      decibels: 430,
       voted: false,
       ts: Date.now() - 11 * 3600000
     },
@@ -452,8 +431,8 @@
       avatarClass: "cream",
       time: "1d ago",
       body: "Borrowed a friend's apartment for a week. The hardest part was learning which silence was restful and which was just empty.",
-      decibels: 2,
-      voted: true,
+      decibels: 0,
+      voted: false,
       ts: Date.now() - 26 * 3600000
     },
     {
@@ -473,12 +452,11 @@
   const hasCooldown = false; // set to true to demo cooldown state
 
   function dbLevel(n) {
-    if (n === 0) return 0;
-    if (n <= 5)  return 1;
-    if (n <= 15) return 2;
-    if (n <= 40) return 3;
-    if (n <= 100)return 4;
-    return 5;
+    if (n === 0)    return 0;
+    if (n < 10)     return 1;
+    if (n < 100)    return 2;
+    if (n < 1000)   return 3;
+    return 4;
   }
 
   function renderPosts() {
@@ -505,7 +483,6 @@
         <div class="post-body">${bodyText}${moreBtn}</div>
         <div class="post-footer">
           <div class="decibels ${p.voted ? 'voted' : ''}" data-level="${dbLevel(p.decibels)}" data-id="${p.id}" onclick="toggleVote(${p.id})">
-            <div class="bar"></div>
             <div class="bar"></div>
             <div class="bar"></div>
             <div class="bar"></div>

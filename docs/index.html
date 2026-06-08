@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hush</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       #FAF6F0;
+      --parchment:   #F0E6D8;
+      --blush:       #E8C4C4;
+      --blush-light: #F2DADA;
+      --muted:       #C4A8A8;
+      --wine:        #7B3B4E;
+      --wine-light:  #A05468;
+      --wine-pale:   #D4A0AD;
+      --text:        #3A2A2E;
+      --text-muted:  #8A6A70;
+    }
+
+    body {
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'Georgia', serif;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ─────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--cream);
+      border-bottom: 1px solid var(--blush);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      height: 52px;
+    }
+
+    .wordmark {
+      font-size: 1.25rem;
+      font-style: italic;
+      color: var(--wine);
+      letter-spacing: 0.04em;
+      user-select: none;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--blush);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: var(--wine);
+      font-style: normal;
+      font-family: system-ui;
+      cursor: pointer;
+    }
+
+    /* ── SORT TOGGLE ─────────────────────────── */
+    .sort-bar {
+      max-width: 560px;
+      margin: 1.5rem auto 0;
+      padding: 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sort-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      font-family: system-ui;
+    }
+
+    .toggle-group {
+      display: flex;
+      background: var(--parchment);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .toggle-btn {
+      padding: 4px 14px;
+      border: none;
+      border-radius: 16px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-family: system-ui;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .toggle-btn.active {
+      background: var(--wine);
+      color: #fff;
+    }
+
+    /* ── FEED ────────────────────────────────── */
+    .feed {
+      max-width: 560px;
+      margin: 1.25rem auto 6rem;
+      padding: 0 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    /* ── POST CARD ───────────────────────────── */
+    .post {
+      background: var(--cream);
+      border-top: 1px solid var(--blush-light);
+      padding: 1.25rem 0 1rem;
+    }
+
+    .post:first-child {
+      border-top: none;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .post-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--blush);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .post-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .post-avatar.wine  { background: var(--wine-pale); }
+    .post-avatar.blush { background: var(--blush); }
+    .post-avatar.cream { background: var(--parchment); }
+
+    .post-meta { flex: 1; }
+
+    .post-handle {
+      font-size: 0.8rem;
+      font-family: system-ui;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .post-time {
+      font-size: 0.7rem;
+      font-family: system-ui;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .post-body {
+      font-size: 0.975rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    .post-footer {
+      margin-top: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* ── DECIBELS ────────────────────────────── */
+    .decibels {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+
+    .decibels .bar {
+      width: 3px;
+      border-radius: 2px;
+      background: var(--blush);
+      transition: background 0.2s, height 0.2s;
+    }
+
+    .decibels:hover .bar,
+    .decibels.voted .bar {
+      background: var(--wine-light);
+    }
+
+    /* bar heights encode rough magnitude without showing exact number */
+    .decibels[data-level="0"] .bar { height: 4px; }
+
+    .decibels[data-level="1"] .bar:nth-child(1) { height: 4px; }
+    .decibels[data-level="1"] .bar:nth-child(2) { height: 7px; }
+    .decibels[data-level="1"] .bar:nth-child(3) { height: 4px; }
+    .decibels[data-level="1"] .bar:nth-child(4) { height: 4px; }
+    .decibels[data-level="1"] .bar:nth-child(5) { height: 4px; }
+
+    .decibels[data-level="2"] .bar:nth-child(1) { height: 5px; }
+    .decibels[data-level="2"] .bar:nth-child(2) { height: 9px; }
+    .decibels[data-level="2"] .bar:nth-child(3) { height: 12px; }
+    .decibels[data-level="2"] .bar:nth-child(4) { height: 8px; }
+    .decibels[data-level="2"] .bar:nth-child(5) { height: 5px; }
+
+    .decibels[data-level="3"] .bar:nth-child(1) { height: 7px; }
+    .decibels[data-level="3"] .bar:nth-child(2) { height: 13px; }
+    .decibels[data-level="3"] .bar:nth-child(3) { height: 18px; }
+    .decibels[data-level="3"] .bar:nth-child(4) { height: 13px; }
+    .decibels[data-level="3"] .bar:nth-child(5) { height: 7px; }
+
+    .decibels[data-level="4"] .bar:nth-child(1) { height: 9px; }
+    .decibels[data-level="4"] .bar:nth-child(2) { height: 16px; }
+    .decibels[data-level="4"] .bar:nth-child(3) { height: 22px; }
+    .decibels[data-level="4"] .bar:nth-child(4) { height: 16px; }
+    .decibels[data-level="4"] .bar:nth-child(5) { height: 9px; }
+
+    .decibels[data-level="5"] .bar:nth-child(1) { height: 11px; }
+    .decibels[data-level="5"] .bar:nth-child(2) { height: 18px; }
+    .decibels[data-level="5"] .bar:nth-child(3) { height: 26px; }
+    .decibels[data-level="5"] .bar:nth-child(4) { height: 18px; }
+    .decibels[data-level="5"] .bar:nth-child(5) { height: 11px; }
+
+    /* ── COMPOSE BUTTON (FAB) ────────────────── */
+    .fab {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--wine);
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: 0.7rem 1.75rem;
+      font-size: 0.85rem;
+      font-family: system-ui;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      box-shadow: 0 2px 16px rgba(123,59,78,0.22);
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .fab:hover { background: var(--wine-light); transform: translateX(-50%) translateY(-1px); }
+
+    .fab.cooldown {
+      background: var(--muted);
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .fab.cooldown:hover { transform: translateX(-50%); }
+
+    /* ── COMPOSE SHEET ───────────────────────── */
+    .sheet-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(58,42,46,0.3);
+      z-index: 20;
+      backdrop-filter: blur(2px);
+    }
+
+    .sheet-overlay.open { display: block; }
+
+    .sheet {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 560px;
+      background: var(--cream);
+      border-top: 1px solid var(--blush);
+      border-radius: 16px 16px 0 0;
+      padding: 1.25rem 1.25rem 2rem;
+      z-index: 30;
+      display: none;
+    }
+
+    .sheet.open { display: block; }
+
+    .sheet-handle {
+      width: 36px;
+      height: 3px;
+      background: var(--blush);
+      border-radius: 2px;
+      margin: 0 auto 1.25rem;
+    }
+
+    .sheet textarea {
+      width: 100%;
+      min-height: 120px;
+      background: var(--parchment);
+      border: 1px solid var(--blush);
+      border-radius: 10px;
+      padding: 0.85rem;
+      font-family: 'Georgia', serif;
+      font-size: 0.975rem;
+      color: var(--text);
+      line-height: 1.6;
+      resize: none;
+      outline: none;
+    }
+
+    .sheet textarea:focus { border-color: var(--wine-pale); }
+
+    .sheet textarea::placeholder { color: var(--muted); }
+
+    .sheet-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.75rem;
+    }
+
+    .char-count {
+      font-size: 0.72rem;
+      font-family: system-ui;
+      color: var(--text-muted);
+    }
+
+    .char-count.over { color: var(--wine); }
+
+    .submit-btn {
+      background: var(--wine);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.8rem;
+      font-family: system-ui;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover { background: var(--wine-light); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="wordmark">hush</span>
+  <div class="nav-right">
+    <div class="avatar">you</div>
+  </div>
+</nav>
+
+<div class="sort-bar">
+  <span class="sort-label">sort by</span>
+  <div class="toggle-group">
+    <button class="toggle-btn active" id="btn-chron" onclick="setSort('chron')">recent</button>
+    <button class="toggle-btn"        id="btn-db"    onclick="setSort('db')">decibels</button>
+  </div>
+</div>
+
+<div class="feed" id="feed"></div>
+
+<button class="fab" id="fab" onclick="openSheet()">whisper</button>
+
+<div class="sheet-overlay" id="overlay" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <textarea id="compose-input" placeholder="Say something worth waiting for…" maxlength="500" oninput="updateCount()"></textarea>
+  <div class="sheet-footer">
+    <span class="char-count" id="char-count">500</span>
+    <button class="submit-btn" onclick="submitPost()">post</button>
+  </div>
+</div>
+
+<script>
+  const POSTS = [
+    {
+      id: 1,
+      handle: "@margaux",
+      avatarClass: "cream",
+      time: "4h ago",
+      body: "The light in January is thin and honest. It doesn't flatter anything — not the buildings, not the people. But it's the only light that feels true.",
+      decibels: 5,
+      voted: false,
+      ts: Date.now() - 4 * 3600000
+    },
+    {
+      id: 2,
+      handle: "@roxy",
+      avatarClass: "wine",
+      time: "7h ago",
+      body: "Every club has a Tuesday night when it reveals its real self. No dress code, no hype, just whoever actually loves the music. That's the night you want.",
+      decibels: 4,
+      voted: false,
+      ts: Date.now() - 7 * 3600000
+    },
+    {
+      id: 3,
+      handle: "@tina",
+      avatarClass: "blush",
+      time: "9h ago",
+      body: "She wore the same earrings to three events in a row and somehow each time they meant something different. That's not a wardrobe. That's a language.",
+      decibels: 3,
+      voted: false,
+      ts: Date.now() - 9 * 3600000
+    },
+    {
+      id: 4,
+      handle: "@celeste",
+      avatarClass: "cream",
+      time: "11h ago",
+      body: "A restaurant that serves only one thing perfectly is making a statement about patience. You either believe in it or you don't.",
+      decibels: 5,
+      voted: false,
+      ts: Date.now() - 11 * 3600000
+    },
+    {
+      id: 5,
+      handle: "@margaux",
+      avatarClass: "cream",
+      time: "1d ago",
+      body: "Borrowed a friend's apartment for a week. The hardest part was learning which silence was restful and which was just empty.",
+      decibels: 2,
+      voted: true,
+      ts: Date.now() - 26 * 3600000
+    },
+  ];
+
+  let sortMode = 'chron';
+  let nextId = 100;
+  const hasCooldown = false; // set to true to demo cooldown state
+
+  function dbLevel(n) {
+    if (n === 0) return 0;
+    if (n <= 5)  return 1;
+    if (n <= 15) return 2;
+    if (n <= 40) return 3;
+    if (n <= 100)return 4;
+    return 5;
+  }
+
+  function renderPosts() {
+    const sorted = [...POSTS].sort((a, b) =>
+      sortMode === 'chron' ? b.ts - a.ts : b.decibels - a.decibels
+    );
+
+    document.getElementById('feed').innerHTML = sorted.map(p => `
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar ${p.avatarClass}"></div>
+          <div class="post-meta">
+            <div class="post-handle">${p.handle}</div>
+            <div class="post-time">${p.time}</div>
+          </div>
+        </div>
+        <div class="post-body">${p.body}</div>
+        <div class="post-footer">
+          <div class="decibels ${p.voted ? 'voted' : ''}" data-level="${dbLevel(p.decibels)}" data-id="${p.id}" onclick="toggleVote(${p.id})">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function toggleVote(id) {
+    const p = POSTS.find(x => x.id === id);
+    if (!p) return;
+    p.voted = !p.voted;
+    p.decibels += p.voted ? 1 : -1;
+    renderPosts();
+  }
+
+  function setSort(mode) {
+    sortMode = mode;
+    document.getElementById('btn-chron').classList.toggle('active', mode === 'chron');
+    document.getElementById('btn-db').classList.toggle('active',    mode === 'db');
+    renderPosts();
+  }
+
+  function openSheet() {
+    if (hasCooldown) return;
+    document.getElementById('sheet').classList.add('open');
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('compose-input').focus();
+  }
+
+  function closeSheet() {
+    document.getElementById('sheet').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  }
+
+  function updateCount() {
+    const input = document.getElementById('compose-input');
+    const rem = 500 - input.value.length;
+    const el = document.getElementById('char-count');
+    el.textContent = rem;
+    el.classList.toggle('over', rem < 20);
+  }
+
+  function submitPost() {
+    const input = document.getElementById('compose-input');
+    const text = input.value.trim();
+    if (!text) return;
+    POSTS.unshift({
+      id: nextId++,
+      handle: "@you",
+      avatarClass: "wine",
+      time: "just now",
+      body: text,
+      decibels: 0,
+      voted: false,
+      ts: Date.now()
+    });
+    input.value = '';
+    updateCount();
+    closeSheet();
+    setSort('chron');
+  }
+
+  if (hasCooldown) {
+    const fab = document.getElementById('fab');
+    fab.textContent = '18h 22m remaining';
+    fab.classList.add('cooldown');
+  }
+
+  renderPosts();
+</script>
+</body>
+</html>

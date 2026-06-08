@@ -113,6 +113,113 @@
       color: #fff;
     }
 
+    /* ── AMBIENT BAR ─────────────────────────── */
+    .ambient-bar {
+      max-width: 560px;
+      margin: 0.6rem auto 0;
+      padding: 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-height: 32px;
+    }
+
+    .ambient-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* pill switch */
+    .switch {
+      position: relative;
+      width: 32px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .switch input { display: none; }
+
+    .switch-track {
+      position: absolute;
+      inset: 0;
+      background: var(--blush-light);
+      border-radius: 9px;
+      transition: background 0.2s;
+    }
+
+    .switch input:checked + .switch-track { background: var(--wine); }
+
+    .switch-thumb {
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.2s;
+      pointer-events: none;
+    }
+
+    .switch input:checked ~ .switch-thumb { transform: translateX(14px); }
+
+    .ambient-label {
+      font-size: 0.72rem;
+      font-family: system-ui;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .ambient-label.on { color: var(--wine); }
+
+    .volume-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex: 1;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .volume-wrap.visible { opacity: 1; pointer-events: auto; }
+
+    .volume-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      flex: 1;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--blush);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--wine);
+      cursor: pointer;
+    }
+
+    .volume-icon {
+      font-size: 0.85rem;
+      line-height: 1;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .scope-label {
+      font-size: 0.68rem;
+      font-family: system-ui;
+      color: var(--text-muted);
+      white-space: nowrap;
+      min-width: 120px;
+    }
+
     /* ── FEED ────────────────────────────────── */
     .feed {
       max-width: 560px;
@@ -369,6 +476,23 @@
   </div>
 </div>
 
+<div class="ambient-bar">
+  <label class="ambient-toggle">
+    <div class="switch">
+      <input type="checkbox" id="ambient-toggle" onchange="toggleAmbient()">
+      <div class="switch-track"></div>
+      <div class="switch-thumb"></div>
+    </div>
+    <span class="ambient-label" id="ambient-label">ambient noise</span>
+  </label>
+  <div class="volume-wrap" id="volume-wrap">
+    <span class="volume-icon">🔈</span>
+    <input type="range" class="volume-slider" id="volume-slider" min="0" max="5" value="1" step="1" oninput="setVolume(this.value)">
+    <span class="volume-icon">🔊</span>
+    <span class="scope-label" id="scope-label"></span>
+  </div>
+</div>
+
 <div class="feed" id="feed"></div>
 
 <button class="fab" id="fab" onclick="openSheet()">speak</button>
@@ -449,7 +573,39 @@
 
   let sortMode = 'chron';
   let nextId = 100;
-  const hasCooldown = false; // set to true to demo cooldown state
+  const hasCooldown = false;
+  let ambientOn = false;
+  let ambientVolume = 1;
+
+  const SCOPE_LABELS = [
+    '',
+    'mutuals of mutuals',
+    'people your mutuals follow',
+    'people you follow (+ their follows)',
+    'one more ring out',
+    'everyone'
+  ];
+
+  function toggleAmbient() {
+    ambientOn = document.getElementById('ambient-toggle').checked;
+    const wrap = document.getElementById('volume-wrap');
+    const lbl  = document.getElementById('ambient-label');
+    wrap.classList.toggle('visible', ambientOn);
+    lbl.classList.toggle('on', ambientOn);
+    updateScopeLabel();
+    renderPosts();
+  }
+
+  function setVolume(v) {
+    ambientVolume = parseInt(v);
+    updateScopeLabel();
+    renderPosts();
+  }
+
+  function updateScopeLabel() {
+    document.getElementById('scope-label').textContent =
+      ambientOn ? SCOPE_LABELS[ambientVolume] : '';
+  }
 
   function dbLevel(n) {
     if (n === 0)    return 0;

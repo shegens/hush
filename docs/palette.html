@@ -181,10 +181,19 @@
     { name: 'warm carnation',  color:'#CC6858', desc:'red-pink warmth, no cool' },
   ];
 
+  const ORANGE = '#D96B10';
+
   function bars(color, opacity, level) {
     const heights = [6, 10, 15, 20];
     return heights.map((h, i) =>
-      `<div class="b" style="height:${h}px;background:${color};opacity:${i < level ? opacity : 0.18}"></div>`
+      `<div class="b" style="height:${h}px;background:${color};opacity:${i < level ? opacity : 0.3}"></div>`
+    ).join('');
+  }
+
+  function orangeBars(level) {
+    const heights = [6, 10, 15, 20];
+    return heights.map((h, i) =>
+      `<div class="b" style="height:${h}px;background:${ORANGE};opacity:${i < level ? 1 : 0.25}"></div>`
     ).join('');
   }
 
@@ -203,7 +212,7 @@
       <div style="font-size:0.68rem;color:var(--muted);margin-top:-8px">${p.desc}</div>
       <div class="demo-row">
         <span class="demo-heard-label">unheard</span>
-        <div class="demo-bars">${bars(p.color, 0.18, 3)}</div>
+        <div class="demo-bars">${orangeBars(3)}</div>
         <span class="demo-heard-label" style="margin-left:1.25rem">hover</span>
         <div class="demo-bars">${bars(p.color, 0.5, 3)}</div>
         <span class="demo-heard-label" style="margin-left:1.25rem">heard</span>

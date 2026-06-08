@@ -18,6 +18,7 @@
       --wine-pale:   rgba(215, 120, 40, 0.15);
       --text:        #221206;
       --text-muted:  #8C5828;
+      --link-hover:  #E8829A;
     }
 
     body {
@@ -397,7 +398,9 @@
       letter-spacing: 0.02em;
     }
 
-    .read-more:hover { text-decoration: underline; }
+    .read-more:hover { text-decoration: underline; color: var(--link-hover); }
+
+    a:hover { color: var(--link-hover) !important; }
 
     .post-footer {
       margin-top: 0.85rem;

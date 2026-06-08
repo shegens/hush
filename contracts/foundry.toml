@@ -1,0 +1,9 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc = "0.8.20"
+
+[profile.default.rpc_endpoints]
+lens = "https://rpc.lens.xyz"
+lens_testnet = "https://rpc.testnet.lens.xyz"

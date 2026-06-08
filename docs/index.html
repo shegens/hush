@@ -409,6 +409,21 @@
       gap: 1rem;
     }
 
+    .delete-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      color: var(--blush);
+      margin-left: auto;
+      transition: color 0.15s;
+    }
+
+    .delete-btn:hover { color: var(--link-hover); }
+    .delete-btn svg { width: 13px; height: 13px; fill: currentColor; }
+
     /* ── DECIBELS ────────────────────────────── */
     .decibels {
       display: flex;
@@ -792,6 +807,7 @@
             <div class="bar"></div>
             <div class="bar"></div>
           </div>
+          ${p.handle === '@you' ? `<button class="delete-btn" onclick="deletePost(${p.id})"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>` : ''}
         </div>
       </div>
     `}).join('');
@@ -800,6 +816,12 @@
   function expandPost(id) {
     const p = POSTS.find(x => x.id === id);
     if (p) { p.expanded = true; renderPosts(); }
+  }
+
+  function deletePost(id) {
+    const i = POSTS.findIndex(x => x.id === id);
+    if (i !== -1) { POSTS.splice(i, 1); renderPosts(); }
+    // cooldown intentionally unaffected — deletion doesn't reset the 24h window
   }
 
   function toggleHeard(id) {

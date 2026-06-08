@@ -3,61 +3,80 @@
 ## What
 Private social platform. One post per day. Quality > quantity. High signal.
 
-## Chain
-Lens Protocol (ZKsync L2). Feed Rules enforce 1-post/day limit onchain.
-Gas sponsored via paymaster — free UX for users.
-
 ## Repo
 `shegens/hush` (public for GitHub Pages)
-Token: [token in TOOLS.md]
 Pages: https://shegens.github.io/hush/
+
+## Auth
+**Para** (getpara.com) — embedded wallet + SIWE. No gas, no transactions. Supports email/social onboarding for non-crypto users. Server verifies signature, issues JWT session.
+
+## Chain (future)
+Lens Protocol (ZKsync L2). `HushFeedRule.sol` ready for deployment. Gas sponsored via paymaster. v1 enforces 24h limit server-side only.
 
 ## Stack
 - Smart contracts: Solidity + Foundry (`contracts/`)
 - Frontend: Next.js + Tailwind (`apps/web/`)
-- Auth: **Para** (getpara.com) — embedded wallet + SIWE, no gas, supports email/social onboarding
+- Auth: Para (wallet login, SIWE, no gas)
+- DB: Postgres — posts + off-chain decibels (`packages/db/schema.sql`)
 - Storage: Lens Storage Nodes (future)
-- DB: Postgres — off-chain decibels (`packages/db/schema.sql`)
 
 ## Design
-- Palette: cream `#FDF6EE`, orange-wine `#D96B10`, pink `#F46080`
+- Background: `#FDF6EE` (cream)
+- Parchment: `#F7EDE2`
+- Accent: `#D96B10` (orange-wine)
+- Pink: `#F46080` (heard state — full opacity; hover 60%; unheard stays orange)
 - Handle/stat color: `#5C2E0E`
-- Cream bg: `#FDF6EE`, parchment: `#F7EDE2`
-- Tone: soft, hushed, clean — no noise, no emoji in UI
-- Font: Georgia serif for posts, system-ui for UI chrome
+- Body text: `#221206`
+- Muted: `#8C5828`
+- Link hover: `#E87060`
+- No emoji anywhere in UI
+- Font: Georgia serif (posts), system-ui (chrome)
+- Tone: soft, hushed, clean, minimal
 
 ## Terminology
-- Like → **heard** (decibels icon, 4 ascending bars)
+- Like → **heard** (4-bar decibel icon)
 - Post button → **speak**
 - Follow → **tune in** / **tuned**
-- Decibels display: 4-bar icon, opacity-based (orange unheard, pink `#F46080` heard at 100%, hover at 60%)
-- Feed sort: **time** (chronological) or **volume** (24h buckets, top decibels per day)
-- Ambient noise: slider 0–5, controls social graph radius of feed (no labels — user discovers)
+- Feed sort: **time** (chron) | **volume** (24h buckets, top decibels per day)
+- Ambient noise: 0–5 slider, controls social graph radius — no labels, user discovers
 
 ## Core Rules
-- 1 post per 24h rolling window (not calendar day) — enforced onchain via HushFeedRule.sol
+- 1 post per 24h rolling window (not calendar day)
 - Deleting a post does NOT reset the cooldown
-- Char limit: 999. Posts fold at 333 chars with "… read more"
-- No follower/following counts — only **frequency** (degrees of separation)
-- No exact decibel counts — bar shading encodes tiers (1–9, 10–99, 100–999, 1000+)
+- Char limit: 999. Feed folds at 333 chars with "… read more"
+- No follower/following counts — only **frequency** (degrees of separation: 0 = following, 1 = mutual in common, etc.)
+- No exact decibel counts — 4 bar tiers: 1–9 / 10–99 / 100–999 / 1000+
+- Unheard bars: orange at full opacity. Heard bars: pink `#F46080` full. Hover: pink 60%.
+
+## Ambient Noise Levels (0–5)
+- 0: your feed only (people you follow)
+- 1: mutuals of mutuals
+- 2: people your mutuals follow
+- 3: people you follow (mutual or not) + their follows
+- 4: one more ring outward
+- 5: everyone
 
 ## Prototype Pages
 - Feed: `/hush/index.html`
 - Profile: `/hush/profile.html?u=@handle`
-- Palette picker: `/hush/palette.html`
-- Test users: @margaux, @roxy, @tina, @celeste (9 posts each, 14-day spread)
+- Palette: `/hush/palette.html`
+- Test users: @margaux (style), @roxy (nightlife), @tina (gossip), @celeste (dining)
+- 9 posts each, 14-day spread, decibels 0–8800
 
 ## Contracts
-- `HushFeedRule.sol` — 24h rolling cooldown per author
+- `HushFeedRule.sol` — 24h rolling cooldown per author, `TooSoon(nextAllowedAt)` error
 - `HushFeedRule.t.sol` — 6 Foundry tests
+- Foundry config: Lens RPC endpoints in `contracts/foundry.toml`
 
 ## TODO
-- [ ] **PWA conversion** (after platform is built out)
+- [ ] **PWA** (after platform built out)
   - Service worker + manifest
-  - Push notification when user's 24h cooldown hits 0 ("you can speak again")
-- [ ] Lens mainnet deployment
-- [ ] Real auth (Lens wallet)
-- [ ] Real feed from Lens API
+  - Push notification when cooldown hits 0 ("you can speak again")
+- [ ] Para auth integration
+- [ ] Next.js app scaffold with real API routes
+- [ ] Postgres setup + Drizzle or Prisma ORM
+- [ ] Real feed pagination
 - [ ] Profile photos
-- [ ] DMs ("whispers"?)
 - [ ] Notifications page
+- [ ] DMs ("whispers"?)
+- [ ] Lens mainnet deployment (future v2)

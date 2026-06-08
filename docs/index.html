@@ -775,9 +775,9 @@
       return divider + `
       <div class="post">
         <div class="post-header">
-          <div class="post-avatar ${p.avatarClass}"></div>
+          <a href="/hush/profile.html?u=${encodeURIComponent(p.handle)}" style="flex-shrink:0;"><div class="post-avatar ${p.avatarClass}"></div></a>
           <div class="post-meta">
-            <div class="post-handle">${p.handle}</div>
+            <a class="post-handle" href="/hush/profile.html?u=${encodeURIComponent(p.handle)}" style="text-decoration:none;color:inherit;">${p.handle}</a>
             <div class="post-time">${p.time}</div>
           </div>
         </div>

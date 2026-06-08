@@ -52,23 +52,120 @@
       text-decoration: none;
     }
 
-    .back-btn {
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--blush);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: var(--wine);
+      font-style: normal;
+      font-family: system-ui;
+      cursor: pointer;
+    }
+
+    .nav-search {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex: 1;
+      max-width: 240px;
+    }
+
+    .search-btn {
       background: none;
       border: none;
       cursor: pointer;
+      padding: 4px;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
       color: var(--text-muted);
-      font-family: system-ui;
-      font-size: 0.78rem;
-      letter-spacing: 0.03em;
-      text-decoration: none;
+      flex-shrink: 0;
       transition: color 0.15s;
     }
 
-    .back-btn:hover { color: var(--wine); }
-    .back-btn svg { width: 14px; height: 14px; fill: currentColor; }
+    .search-btn:hover { color: var(--wine); }
+    .search-btn svg { width: 15px; height: 15px; fill: currentColor; }
+
+    .search-input {
+      width: 0; max-width: 0;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid transparent;
+      padding: 0.25rem 0;
+      font-family: system-ui;
+      font-size: 0.82rem;
+      color: var(--text);
+      outline: none;
+      transition: width 0.25s ease, max-width 0.25s ease, border-color 0.25s ease;
+      overflow: hidden;
+    }
+
+    .nav-search.open .search-input { width: 160px; max-width: 160px; border-bottom-color: var(--blush); }
+    .nav-search.open .search-input:focus { border-bottom-color: var(--wine-light); }
+    .search-input::placeholder { color: var(--muted); }
+
+    .search-results {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: 220px;
+      background: var(--cream);
+      border: 1px solid var(--blush-light);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(44,26,18,0.08);
+      display: none;
+      z-index: 50;
+    }
+
+    .search-results.open { display: block; }
+
+    .search-result {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.65rem 1rem;
+      cursor: pointer;
+      transition: background 0.1s;
+      text-decoration: none;
+    }
+
+    .search-result:hover { background: var(--parchment); }
+
+    .search-result-avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--blush);
+      flex-shrink: 0;
+    }
+
+    .search-result-avatar.wine  { background: var(--wine-pale); }
+    .search-result-avatar.blush { background: var(--blush); }
+    .search-result-avatar.cream { background: var(--parchment); }
+
+    .search-result-handle {
+      font-size: 0.8rem;
+      font-family: system-ui;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .search-no-results {
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-family: system-ui;
+      color: var(--text-muted);
+    }
 
     /* ── PROFILE HEADER ──────────────────────── */
     .profile-wrap {
@@ -255,10 +352,16 @@
 
 <nav>
   <a class="wordmark" href="/hush/">hush</a>
-  <a class="back-btn" href="/hush/">
-    <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-    feed
-  </a>
+  <div class="nav-right">
+    <div class="nav-search" id="nav-search">
+      <button class="search-btn" onclick="toggleSearch()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      </button>
+      <input class="search-input" id="search-input" type="text" placeholder="find someone…" oninput="runSearch(this.value)" autocomplete="off">
+      <div class="search-results" id="search-results"></div>
+    </div>
+    <div class="avatar">you</div>
+  </div>
 </nav>
 
 <div class="profile-wrap">
@@ -394,6 +497,44 @@
 
     renderProfile();
   }
+
+  // ── NAV SEARCH ──────────────────────────────
+  const NAV_USERS = [
+    { handle: '@margaux', avatarClass: 'cream' },
+    { handle: '@roxy',    avatarClass: 'wine'  },
+    { handle: '@tina',    avatarClass: 'blush' },
+    { handle: '@celeste', avatarClass: 'cream' },
+  ];
+
+  let searchOpen = false;
+
+  function toggleSearch() {
+    searchOpen = !searchOpen;
+    document.getElementById('nav-search').classList.toggle('open', searchOpen);
+    if (searchOpen) document.getElementById('search-input').focus();
+    else {
+      document.getElementById('search-input').value = '';
+      document.getElementById('search-results').classList.remove('open');
+    }
+  }
+
+  function runSearch(q) {
+    const res = document.getElementById('search-results');
+    q = q.trim().toLowerCase();
+    if (!q) { res.classList.remove('open'); return; }
+    const hits = NAV_USERS.filter(u => u.handle.toLowerCase().includes(q));
+    res.innerHTML = hits.length
+      ? hits.map(u => `
+          <a class="search-result" href="/hush/profile.html?u=${encodeURIComponent(u.handle)}">
+            <div class="search-result-avatar ${u.avatarClass}"></div>
+            <span class="search-result-handle">${u.handle}</span>
+          </a>`).join('')
+      : `<div class="search-no-results">no one found</div>`;
+    res.classList.add('open');
+  }
+
+  window.toggleSearch = toggleSearch;
+  window.runSearch = runSearch;
 </script>
 </body>
 </html>

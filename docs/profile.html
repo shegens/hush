@@ -80,7 +80,7 @@
     .profile-header {
       padding: 2rem 0 1.25rem;
       display: flex;
-      align-items: flex-end;
+      align-items: flex-start;
       gap: 1.25rem;
     }
 
@@ -113,8 +113,10 @@
 
     .profile-stats {
       display: flex;
-      gap: 1.5rem;
+      align-items: center;
+      gap: 1.25rem;
       margin-top: 0.75rem;
+      flex-wrap: wrap;
     }
 
     .stat {
@@ -145,7 +147,6 @@
       cursor: pointer;
       transition: background 0.15s;
       white-space: nowrap;
-      align-self: center;
     }
 
     .follow-btn:hover { background: var(--wine-light); }
@@ -361,9 +362,9 @@
               <div class="stat"><strong>${user.posts.length}</strong>posts</div>
               <div class="stat"><strong>${user.followers.toLocaleString()}</strong>followers</div>
               <div class="stat"><strong>${user.following}</strong>following</div>
+              <button class="follow-btn ${following ? 'following' : ''}" onclick="toggleFollow()">${following ? 'tuned in' : 'tune in'}</button>
             </div>
           </div>
-          <button class="follow-btn ${following ? 'following' : ''}" onclick="toggleFollow()">${following ? 'following' : 'follow'}</button>
         </div>
         <hr class="profile-divider">
         <div class="feed">${postsHtml}</div>

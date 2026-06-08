@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hush — pink palette</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:    #FDF6EE;
+      --wine:     #D96B10;
+      --text:     #221206;
+      --muted:    #8C5828;
+    }
+
+    body {
+      background: var(--cream);
+      color: var(--text);
+      font-family: system-ui, sans-serif;
+      padding: 2rem 1.5rem 4rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .wordmark {
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-size: 1.2rem;
+      color: var(--wine);
+      text-decoration: none;
+    }
+
+    h1 {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .section {
+      margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .swatches {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--wine);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .swatch {
+      display: flex;
+      align-items: center;
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--wine);
+      cursor: pointer;
+      transition: opacity 0.1s;
+      gap: 1rem;
+    }
+
+    .swatch:last-child { border-bottom: none; }
+    .swatch:hover { opacity: 0.85; }
+
+    .swatch-block {
+      width: 48px;
+      height: 28px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .swatch-info { flex: 1; }
+
+    .swatch-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .swatch-hex {
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-family: monospace;
+      margin-top: 2px;
+    }
+
+    .swatch-desc {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    /* demo row showing all 3 tones in context */
+    .demo-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      align-items: flex-end;
+    }
+
+    .demo-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+    }
+
+    .demo-bars .b {
+      width: 4px;
+      border-radius: 2px;
+    }
+
+    .demo-heard-label {
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-right: 0.5rem;
+    }
+
+    .demo-btn {
+      padding: 0.35rem 0.9rem;
+      border-radius: 16px;
+      border: none;
+      font-size: 0.75rem;
+      font-family: system-ui;
+      cursor: default;
+    }
+
+    .copied {
+      font-size: 0.65rem;
+      color: var(--wine);
+      opacity: 0;
+      transition: opacity 0.3s;
+      margin-left: auto;
+    }
+
+    .copied.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="wordmark" href="/hush/">hush</a>
+</nav>
+
+<h1>pink palette picker</h1>
+
+<div class="section">
+  <div class="section-title">warm rose / blush family</div>
+  <div class="swatches" id="swatches-warm"></div>
+</div>
+
+<div class="section">
+  <div class="section-title">cooler petal / mauve family</div>
+  <div class="swatches" id="swatches-cool"></div>
+</div>
+
+<div class="section">
+  <div class="section-title">preview: heard state in context</div>
+  <div class="swatches" id="swatches-preview"></div>
+</div>
+
+<script>
+  const WARM = [
+    { name: 'dusty rose',     hex: '#F2C4C4', desc: 'muted, vintage' },
+    { name: 'petal',          hex: '#F5C0B8', desc: 'warm blush, slight orange' },
+    { name: 'old rose',       hex: '#EDB4AE', desc: 'antique warmth' },
+    { name: 'soft coral-pink',hex: '#F0AEAD', desc: 'warm, not orange' },
+    { name: 'rose quartz',    hex: '#F2B8C6', desc: 'rosy, gentle warmth' },
+    { name: 'tea rose',       hex: '#F4B8B0', desc: 'warm, peachy undertone' },
+    { name: 'ballet slipper', hex: '#EEC8C8', desc: 'pale, classic blush' },
+    { name: 'faded carnation',hex: '#F0B4BE', desc: 'warm carnation, muted' },
+    { name: 'antique blush',  hex: '#E8B4B8', desc: 'deeper, still warm' },
+  ];
+
+  const COOL = [
+    { name: 'powder pink',    hex: '#F4C8D4', desc: 'light, slightly cool' },
+    { name: 'fairy blush',    hex: '#F9D0DC', desc: 'very pale, neutral' },
+    { name: 'misty rose',     hex: '#EEC8D4', desc: 'classic misty rose' },
+    { name: 'cameo pink',     hex: '#EFB8CC', desc: 'medium, cool undertone' },
+    { name: 'pale mulberry',  hex: '#E4B4C4', desc: 'hints of purple' },
+    { name: 'pale dogwood',   hex: '#EDCAC4', desc: 'Pantone 2016, neutral' },
+    { name: 'crystal pink',   hex: '#F0D0D8', desc: 'icy, clean' },
+    { name: 'mellow rose',    hex: '#EAC0C4', desc: 'between warm + cool' },
+    { name: 'english rose',   hex: '#E8B0C0', desc: 'deeper cool pink' },
+  ];
+
+  function makeSwatch(s, container) {
+    const div = document.createElement('div');
+    div.className = 'swatch';
+    div.style.background = 'var(--cream)';
+    div.innerHTML = `
+      <div class="swatch-block" style="background:${s.hex}"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">${s.name}</div>
+        <div class="swatch-hex">${s.hex}</div>
+        <div class="swatch-desc">${s.desc}</div>
+      </div>
+      <span class="copied" id="c-${s.hex.replace('#','')}">copied</span>
+    `;
+    div.addEventListener('click', () => {
+      navigator.clipboard.writeText(s.hex);
+      const el = document.getElementById(`c-${s.hex.replace('#','')}`);
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 1200);
+    });
+    container.appendChild(div);
+  }
+
+  // preview: show 3 tones (faint / hover / active) as they'd appear on heard bars + button
+  const PREVIEW = [
+    { name: 'warm rose family',  faint:'#FDDDE0', hover:'#F5C8CC', active:'#D96070', desc:'current (raspberry-leaning)' },
+    { name: 'petal family',      faint:'#FCDDD8', hover:'#F5C4BC', active:'#D0706A', desc:'warm, not orange, not raspberry' },
+    { name: 'rose quartz family',faint:'#FCDCE4', hover:'#F5C0CA', active:'#C86878', desc:'balanced warm-cool' },
+    { name: 'old rose family',   faint:'#F8D8D0', hover:'#F0C0B4', active:'#C86860', desc:'earthier warm pink' },
+    { name: 'tea rose family',   faint:'#FCDAD4', hover:'#F4C4BC', active:'#CC6C68', desc:'warm, dusty rose' },
+  ];
+
+  const previewContainer = document.getElementById('swatches-preview');
+  PREVIEW.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'swatch';
+    div.style.flexDirection = 'column';
+    div.style.alignItems = 'flex-start';
+    div.style.gap = '0.6rem';
+    div.innerHTML = `
+      <div style="font-size:0.8rem;font-weight:600;color:var(--text)">${p.name}</div>
+      <div style="font-size:0.68rem;color:var(--muted);margin-top:-4px">${p.desc}</div>
+      <div class="demo-row">
+        <span class="demo-heard-label">unheard</span>
+        <div class="demo-bars">
+          <div class="b" style="height:6px;background:#F9C49A"></div>
+          <div class="b" style="height:10px;background:#F9C49A"></div>
+          <div class="b" style="height:15px;background:#F9C49A"></div>
+          <div class="b" style="height:20px;background:#F9C49A"></div>
+        </div>
+        <span class="demo-heard-label" style="margin-left:1.5rem">hover</span>
+        <div class="demo-bars">
+          <div class="b" style="height:6px;background:${p.hover}"></div>
+          <div class="b" style="height:10px;background:${p.hover}"></div>
+          <div class="b" style="height:15px;background:${p.hover}"></div>
+          <div class="b" style="height:20px;background:${p.hover}"></div>
+        </div>
+        <span class="demo-heard-label" style="margin-left:1.5rem">heard</span>
+        <div class="demo-bars">
+          <div class="b" style="height:6px;background:${p.faint}"></div>
+          <div class="b" style="height:10px;background:${p.faint}"></div>
+          <div class="b" style="height:15px;background:${p.active}"></div>
+          <div class="b" style="height:20px;background:${p.active}"></div>
+        </div>
+        <button class="demo-btn" style="margin-left:1.5rem;background:${p.active};color:#fff">tune in</button>
+        <button class="demo-btn" style="margin-left:0.5rem;background:transparent;color:${p.active};border:1px solid ${p.faint}">tuned</button>
+      </div>
+    `;
+    previewContainer.appendChild(div);
+  });
+
+  WARM.forEach(s => makeSwatch(s, document.getElementById('swatches-warm')));
+  COOL.forEach(s => makeSwatch(s, document.getElementById('swatches-cool')));
+</script>
+</body>
+</html>

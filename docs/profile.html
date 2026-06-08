@@ -149,7 +149,7 @@
       white-space: nowrap;
     }
 
-    .follow-btn:hover { background: var(--wine-light); }
+    .follow-btn:hover { background: var(--link-hover); border-color: var(--link-hover); color: #fff; }
     .follow-btn.following {
       background: transparent;
       color: var(--wine);
@@ -357,7 +357,7 @@
             <div class="profile-stats">
               <div class="stat"><strong>${user.posts.length}</strong>posts</div>
               <div class="stat"><strong>${user.frequency}</strong>frequency</div>
-              <button class="follow-btn ${following ? 'following' : ''}" onclick="toggleFollow()">${following ? 'tuned in' : 'tune in'}</button>
+              <button class="follow-btn ${following ? 'following' : ''}" onclick="toggleFollow()">${following ? 'tuned' : 'tune in'}</button>
             </div>
           </div>
         </div>

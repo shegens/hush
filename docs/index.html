@@ -392,7 +392,7 @@
 
 <div class="feed" id="feed"></div>
 
-<button class="fab" id="fab" onclick="openSheet()">whisper</button>
+<button class="fab" id="fab" onclick="openSheet()">speak</button>
 
 <div class="sheet-overlay" id="overlay" onclick="closeSheet()"></div>
 <div class="sheet" id="sheet">
@@ -578,7 +578,7 @@
 
   if (hasCooldown) {
     const fab = document.getElementById('fab');
-    fab.textContent = '18h 22m remaining';
+    fab.textContent = '18h 22m to speak';
     fab.classList.add('cooldown');
   }
 

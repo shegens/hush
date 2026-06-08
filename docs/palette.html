@@ -163,74 +163,22 @@
 <h1>pink palette picker</h1>
 
 <div class="section">
-  <div class="section-title">warm rose / blush family</div>
-  <div class="swatches" id="swatches-warm"></div>
-</div>
-
-<div class="section">
-  <div class="section-title">cooler petal / mauve family</div>
-  <div class="swatches" id="swatches-cool"></div>
-</div>
-
-<div class="section">
   <div class="section-title">preview: heard state in context</div>
   <div class="swatches" id="swatches-preview"></div>
 </div>
 
 <script>
-  const WARM = [
-    { name: 'dusty rose',     hex: '#F2C4C4', desc: 'muted, vintage' },
-    { name: 'petal',          hex: '#F5C0B8', desc: 'warm blush, slight orange' },
-    { name: 'old rose',       hex: '#EDB4AE', desc: 'antique warmth' },
-    { name: 'soft coral-pink',hex: '#F0AEAD', desc: 'warm, not orange' },
-    { name: 'rose quartz',    hex: '#F2B8C6', desc: 'rosy, gentle warmth' },
-    { name: 'tea rose',       hex: '#F4B8B0', desc: 'warm, peachy undertone' },
-    { name: 'ballet slipper', hex: '#EEC8C8', desc: 'pale, classic blush' },
-    { name: 'faded carnation',hex: '#F0B4BE', desc: 'warm carnation, muted' },
-    { name: 'antique blush',  hex: '#E8B4B8', desc: 'deeper, still warm' },
-  ];
-
-  const COOL = [
-    { name: 'powder pink',    hex: '#F4C8D4', desc: 'light, slightly cool' },
-    { name: 'fairy blush',    hex: '#F9D0DC', desc: 'very pale, neutral' },
-    { name: 'misty rose',     hex: '#EEC8D4', desc: 'classic misty rose' },
-    { name: 'cameo pink',     hex: '#EFB8CC', desc: 'medium, cool undertone' },
-    { name: 'pale mulberry',  hex: '#E4B4C4', desc: 'hints of purple' },
-    { name: 'pale dogwood',   hex: '#EDCAC4', desc: 'Pantone 2016, neutral' },
-    { name: 'crystal pink',   hex: '#F0D0D8', desc: 'icy, clean' },
-    { name: 'mellow rose',    hex: '#EAC0C4', desc: 'between warm + cool' },
-    { name: 'english rose',   hex: '#E8B0C0', desc: 'deeper cool pink' },
-  ];
-
-  function makeSwatch(s, container) {
-    const div = document.createElement('div');
-    div.className = 'swatch';
-    div.style.background = 'var(--cream)';
-    div.innerHTML = `
-      <div class="swatch-block" style="background:${s.hex}"></div>
-      <div class="swatch-info">
-        <div class="swatch-name">${s.name}</div>
-        <div class="swatch-hex">${s.hex}</div>
-        <div class="swatch-desc">${s.desc}</div>
-      </div>
-      <span class="copied" id="c-${s.hex.replace('#','')}">copied</span>
-    `;
-    div.addEventListener('click', () => {
-      navigator.clipboard.writeText(s.hex);
-      const el = document.getElementById(`c-${s.hex.replace('#','')}`);
-      el.classList.add('show');
-      setTimeout(() => el.classList.remove('show'), 1200);
-    });
-    container.appendChild(div);
-  }
-
-  // preview: show 3 tones (faint / hover / active) as they'd appear on heard bars + button
+  // preview: faint = unheard bars bg, hover = hover state, active = heard bars + button
   const PREVIEW = [
-    { name: 'warm rose family',  faint:'#FDDDE0', hover:'#F5C8CC', active:'#D96070', desc:'current (raspberry-leaning)' },
-    { name: 'petal family',      faint:'#FCDDD8', hover:'#F5C4BC', active:'#D0706A', desc:'warm, not orange, not raspberry' },
-    { name: 'rose quartz family',faint:'#FCDCE4', hover:'#F5C0CA', active:'#C86878', desc:'balanced warm-cool' },
-    { name: 'old rose family',   faint:'#F8D8D0', hover:'#F0C0B4', active:'#C86860', desc:'earthier warm pink' },
-    { name: 'tea rose family',   faint:'#FCDAD4', hover:'#F4C4BC', active:'#CC6C68', desc:'warm, dusty rose' },
+    { name: 'dusty rose',      faint:'#FAE4E4', hover:'#F2C4C4', active:'#C86870', desc:'muted, vintage' },
+    { name: 'petal',           faint:'#FCDDD8', hover:'#F5C0B8', active:'#C87068', desc:'warm blush, slight peach' },
+    { name: 'old rose',        faint:'#F8D8D4', hover:'#EDB4AE', active:'#C06860', desc:'antique warmth, earthy' },
+    { name: 'soft coral-pink', faint:'#FADADC', hover:'#F0AEAD', active:'#C86868', desc:'warm, not orange' },
+    { name: 'tea rose',        faint:'#FCDCD8', hover:'#F4B8B0', active:'#C87068', desc:'warm, peachy undertone' },
+    { name: 'ballet slipper',  faint:'#FAE8E8', hover:'#EEC8C8', active:'#C87878', desc:'pale, classic blush' },
+    { name: 'faded carnation', faint:'#FADADC', hover:'#F0B4BE', active:'#C87080', desc:'warm carnation, muted' },
+    { name: 'antique blush',   faint:'#F8D8DC', hover:'#E8B4B8', active:'#C07078', desc:'deeper, still warm' },
+    { name: 'warm carnation',  faint:'#FCDCD8', hover:'#F2BCB0', active:'#CC7065', desc:'red-pink warmth, no cool' },
   ];
 
   const previewContainer = document.getElementById('swatches-preview');
@@ -272,8 +220,7 @@
     previewContainer.appendChild(div);
   });
 
-  WARM.forEach(s => makeSwatch(s, document.getElementById('swatches-warm')));
-  COOL.forEach(s => makeSwatch(s, document.getElementById('swatches-cool')));
+
 </script>
 </body>
 </html>

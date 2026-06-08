@@ -449,10 +449,10 @@
 
     /* heard: same tier logic as unheard, just pink instead of orange */
     .decibels.heard .bar                                 { background: #F46080; opacity: 0.2; }
-    .decibels.heard[data-level="1"] .bar:nth-child(1)    { opacity: 1; }
-    .decibels.heard[data-level="2"] .bar:nth-child(-n+2) { opacity: 1; }
-    .decibels.heard[data-level="3"] .bar:nth-child(-n+3) { opacity: 1; }
-    .decibels.heard[data-level="4"] .bar                 { opacity: 1; }
+    .decibels.heard[data-level="1"] .bar:nth-child(1)    { background: #F46080; opacity: 1; }
+    .decibels.heard[data-level="2"] .bar:nth-child(-n+2) { background: #F46080; opacity: 1; }
+    .decibels.heard[data-level="3"] .bar:nth-child(-n+3) { background: #F46080; opacity: 1; }
+    .decibels.heard[data-level="4"] .bar                 { background: #F46080; opacity: 1; }
 
     /* hover: nudge toward heard state preview */
     .decibels:not(.heard):hover .bar { background: #F46080; opacity: 0.6; }

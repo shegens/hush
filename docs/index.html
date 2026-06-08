@@ -624,67 +624,41 @@
 </div>
 
 <script>
+  const H = 3600000, D = 86400000;
   const POSTS = [
-    {
-      id: 1,
-      handle: "@margaux",
-      avatarClass: "cream",
-      time: "4h ago",
-      body: "The light in January is thin and honest. It doesn't flatter anything — not the buildings, not the people. But it's the only light that feels true.",
-      decibels: 1200,
-      heard: false,
-      ts: Date.now() - 4 * 3600000
-    },
-    {
-      id: 2,
-      handle: "@roxy",
-      avatarClass: "wine",
-      time: "7h ago",
-      body: "Every club has a Tuesday night when it reveals its real self. No dress code, no hype, just whoever actually loves the music. That's the night you want.",
-      decibels: 84,
-      heard: false,
-      ts: Date.now() - 7 * 3600000
-    },
-    {
-      id: 3,
-      handle: "@tina",
-      avatarClass: "blush",
-      time: "9h ago",
-      body: "She wore the same earrings to three events in a row and somehow each time they meant something different. That's not a wardrobe. That's a language.",
-      decibels: 7,
-      heard: true,
-      ts: Date.now() - 9 * 3600000
-    },
-    {
-      id: 4,
-      handle: "@celeste",
-      avatarClass: "cream",
-      time: "11h ago",
-      body: "A restaurant that serves only one thing perfectly is making a statement about patience. You either believe in it or you don't.",
-      decibels: 430,
-      heard: false,
-      ts: Date.now() - 11 * 3600000
-    },
-    {
-      id: 5,
-      handle: "@margaux",
-      avatarClass: "cream",
-      time: "1d ago",
-      body: "Borrowed a friend's apartment for a week. The hardest part was learning which silence was restful and which was just empty.",
-      decibels: 0,
-      heard: false,
-      ts: Date.now() - 26 * 3600000
-    },
-    {
-      id: 6,
-      handle: "@celeste",
-      avatarClass: "cream",
-      time: "2d ago",
-      body: "There's a particular kind of restaurant that exists only in the imagination of people who've never had to run one. Everything is sourced locally, the menu changes daily, the staff are paid fairly, the space is beautiful, and somehow it's also affordable. People describe this place like it's obvious. Like the math just works if you care enough. I've eaten at enough places to know the math never works. Something always gives. Usually it's the staff. Sometimes it's the sourcing. Occasionally it's the owner's savings. The restaurants I trust most are the ones that've clearly made a choice about what they're willing to compromise on — and own it.",
-      decibels: 4,
-      heard: false,
-      ts: Date.now() - 48 * 3600000
-    },
+    {id:1,  handle:"@margaux", avatarClass:"cream", time:"4h ago",  body:"The light in January is thin and honest. It doesn't flatter anything — not the buildings, not the people. But it's the only light that feels true.", decibels:1200, heard:false, ts:Date.now()-4*H},
+    {id:2,  handle:"@roxy",    avatarClass:"wine",  time:"7h ago",  body:"Every club has a Tuesday night when it reveals its real self. No dress code, no hype, just whoever actually loves the music. That's the night you want.", decibels:84, heard:false, ts:Date.now()-7*H},
+    {id:3,  handle:"@tina",    avatarClass:"blush", time:"9h ago",  body:"She wore the same earrings to three events in a row and somehow each time they meant something different. That's not a wardrobe. That's a language.", decibels:7, heard:true, ts:Date.now()-9*H},
+    {id:4,  handle:"@celeste", avatarClass:"cream", time:"11h ago", body:"A restaurant that serves only one thing perfectly is making a statement about patience. You either believe in it or you don't.", decibels:430, heard:false, ts:Date.now()-11*H},
+    {id:5,  handle:"@margaux", avatarClass:"cream", time:"1d ago",  body:"Borrowed a friend's apartment for a week. The hardest part was learning which silence was restful and which was just empty.", decibels:0, heard:false, ts:Date.now()-1*D},
+    {id:6,  handle:"@celeste", avatarClass:"cream", time:"2d ago",  body:"There's a particular kind of restaurant that exists only in the imagination of people who've never had to run one. Everything is sourced locally, the menu changes daily, the staff are paid fairly, the space is beautiful, and somehow it's also affordable. People describe this place like it's obvious. Like the math just works if you care enough. I've eaten at enough places to know the math never works. Something always gives. Usually it's the staff. Sometimes it's the sourcing. Occasionally it's the owner's savings. The restaurants I trust most are the ones that've clearly made a choice about what they're willing to compromise on — and own it.", decibels:4, heard:false, ts:Date.now()-2*D},
+    {id:7,  handle:"@roxy",    avatarClass:"wine",  time:"2d ago",  body:"The DJ who plays to an empty floor at 1am and doesn't change a single thing — that's commitment. Or delusion. The line is thin and honestly that's the appeal.", decibels:210, heard:false, ts:Date.now()-2*D-H},
+    {id:8,  handle:"@tina",    avatarClass:"blush", time:"3d ago",  body:"There is one person in every city who knows everything and tells you just enough to make you desperate for more. Find them. Befriend them. Never cross them.", decibels:980, heard:false, ts:Date.now()-3*D},
+    {id:9,  handle:"@margaux", avatarClass:"cream", time:"3d ago",  body:"There's a particular tyranny in a room that's been perfectly decorated. No one sits down. No one moves anything. You're a guest in a photograph.", decibels:312, heard:false, ts:Date.now()-3*D-H},
+    {id:10, handle:"@celeste", avatarClass:"cream", time:"3d ago",  body:"The bread arrived cold. I didn't say anything. But I noticed. I always notice.", decibels:88, heard:false, ts:Date.now()-3*D-2*H},
+    {id:11, handle:"@tina",    avatarClass:"blush", time:"4d ago",  body:"Two people left the same party early. Neither of them went home. I'm choosing not to elaborate.", decibels:4400, heard:false, ts:Date.now()-4*D},
+    {id:12, handle:"@roxy",    avatarClass:"wine",  time:"4d ago",  body:"Went somewhere new. Terrible sound system. Full room. Best night in months. I'm done having opinions about venues.", decibels:730, heard:false, ts:Date.now()-4*D-H},
+    {id:13, handle:"@tina",    avatarClass:"blush", time:"4d ago",  body:"The rumor was wrong in every specific detail and completely correct in every essential one.", decibels:55, heard:false, ts:Date.now()-4*D-2*H},
+    {id:14, handle:"@margaux", avatarClass:"cream", time:"5d ago",  body:"The best-dressed people I know never talk about clothes.", decibels:8, heard:false, ts:Date.now()-5*D},
+    {id:15, handle:"@celeste", avatarClass:"cream", time:"5d ago",  body:"A menu that hasn't changed in twenty years is either a monument or a warning. Last night I couldn't tell which.", decibels:1560, heard:false, ts:Date.now()-5*D-H},
+    {id:16, handle:"@roxy",    avatarClass:"wine",  time:"6d ago",  body:"The after-party that outlives the party is always in someone's apartment and always ends with a conversation you remember for years.", decibels:44, heard:false, ts:Date.now()-6*D},
+    {id:17, handle:"@margaux", avatarClass:"cream", time:"7d ago",  body:"Vintage is not a style. It's an argument about time.", decibels:540, heard:false, ts:Date.now()-7*D},
+    {id:18, handle:"@tina",    avatarClass:"blush", time:"7d ago",  body:"There's a name I keep hearing in very different rooms. I'm paying attention.", decibels:130, heard:false, ts:Date.now()-7*D-H},
+    {id:19, handle:"@celeste", avatarClass:"cream", time:"8d ago",  body:"Ate alone at the bar. The bartender told me about a restaurant four blocks away that closed last year. It sounded perfect. I'm still mourning it.", decibels:7, heard:false, ts:Date.now()-8*D},
+    {id:20, handle:"@roxy",    avatarClass:"wine",  time:"8d ago",  body:"Closing time is the only honest moment in a nightclub. Watch who stays.", decibels:2100, heard:false, ts:Date.now()-8*D-H},
+    {id:21, handle:"@tina",    avatarClass:"blush", time:"8d ago",  body:"He apologized publicly. The people who deserved the apology were not notified.", decibels:9, heard:false, ts:Date.now()-8*D-2*H},
+    {id:22, handle:"@margaux", avatarClass:"cream", time:"9d ago",  body:"She stopped wearing color for a year and somehow became more visible.", decibels:23, heard:false, ts:Date.now()-9*D},
+    {id:23, handle:"@celeste", avatarClass:"cream", time:"10d ago", body:"Price is information. A cheap meal that makes you feel expensive is the highest form of the art.", decibels:3200, heard:false, ts:Date.now()-10*D},
+    {id:24, handle:"@roxy",    avatarClass:"wine",  time:"10d ago", body:"A city's nightlife is its id. Everything else is the ego working overtime.", decibels:17, heard:false, ts:Date.now()-10*D-H},
+    {id:25, handle:"@tina",    avatarClass:"blush", time:"10d ago", body:"The thing about an open secret is that everyone's silence is a choice.", decibels:620, heard:false, ts:Date.now()-10*D-2*H},
+    {id:26, handle:"@margaux", avatarClass:"cream", time:"11d ago", body:"The city in February: everyone dressed for somewhere warmer, moving fast enough that it almost works.", decibels:1800, heard:false, ts:Date.now()-11*D},
+    {id:27, handle:"@roxy",    avatarClass:"wine",  time:"11d ago", body:"She danced alone for an hour before anyone noticed. By the end, the whole room had reorganized itself around her.", decibels:390, heard:false, ts:Date.now()-11*D-H},
+    {id:28, handle:"@celeste", avatarClass:"cream", time:"12d ago", body:"The dessert was an apology for the main course. I accepted it. I shouldn't have.", decibels:19, heard:false, ts:Date.now()-12*D},
+    {id:29, handle:"@tina",    avatarClass:"blush", time:"12d ago", body:"She left the group chat. No one mentioned it for three days. Then everyone mentioned it at once.", decibels:2, heard:false, ts:Date.now()-12*D-H},
+    {id:30, handle:"@margaux", avatarClass:"cream", time:"13d ago", body:"A scarf tied correctly says something specific about where you grew up. I've never been able to replicate it.", decibels:66, heard:false, ts:Date.now()-13*D},
+    {id:31, handle:"@roxy",    avatarClass:"wine",  time:"13d ago", body:"The music you danced to at 23 will embarrass you and also save you. Simultaneously. For the rest of your life.", decibels:1, heard:false, ts:Date.now()-13*D-H},
+    {id:32, handle:"@celeste", avatarClass:"cream", time:"13d ago", body:"Best meal of the year so far. I won't tell you where. You'll ruin it.", decibels:670, heard:false, ts:Date.now()-13*D-2*H},
+    {id:33, handle:"@tina",    avatarClass:"blush", time:"13d ago", body:"I was asked not to write about this. So I'm writing about the fact that I was asked.", decibels:8800, heard:false, ts:Date.now()-13*D-3*H},
   ];
 
   const USERS = [

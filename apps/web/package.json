@@ -11,7 +11,7 @@
     "next": "^14",
     "react": "^18",
     "react-dom": "^18",
-    "@lens-protocol/client": "^2"
+    "@getpara/react-sdk": "latest"
   },
   "devDependencies": {
     "typescript": "^5",

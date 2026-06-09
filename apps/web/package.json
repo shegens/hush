@@ -5,13 +5,15 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "postinstall": "npx setup-para"
   },
   "dependencies": {
     "next": "^14",
     "react": "^18",
     "react-dom": "^18",
-    "@getpara/react-sdk": "latest"
+    "@getpara/react-sdk": "latest",
+    "@tanstack/react-query": "^5.0.0"
   },
   "devDependencies": {
     "typescript": "^5",

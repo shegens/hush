@@ -9,6 +9,7 @@ Pages: https://shegens.github.io/hush/
 
 ## Auth
 **Para** (getpara.com) — embedded wallet + SIWE. No gas, no transactions. Supports email/social onboarding for non-crypto users. Server verifies signature, issues JWT session.
+- Client API key: `beta_7be79cf23a354e3c902e6f748b9090cf`
 
 ## Chain (future)
 Lens Protocol (ZKsync L2). `HushFeedRule.sol` ready for deployment. Gas sponsored via paymaster. v1 enforces 24h limit server-side only.

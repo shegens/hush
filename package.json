@@ -6,5 +6,8 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "test": "turbo test"
+  },
+  "devDependencies": {
+    "turbo": "^2"
   }
 }

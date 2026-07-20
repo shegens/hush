@@ -49,6 +49,16 @@ Lens Protocol (ZKsync L2). `HushFeedRule.sol` ready for deployment. Gas sponsore
 - No exact decibel counts — 4 bar tiers: 1–9 / 10–99 / 100–999 / 1000+
 - Unheard bars: orange at full opacity. Heard bars: pink `#F46080` full. Hover: pink 60%.
 
+## Replies (tentative)
+- Replies are nested under posts, not standalone feed items
+- Replies do NOT count toward the 24h post cap
+- No volume/decibels on replies
+- Cannot reply to your own post or reply (no self-threading)
+- One reply per user per parent node (can't reply twice to same post/reply)
+- Can reply to other users' replies (nesting allowed, organic threads form)
+- Feed shows reply count indicator; tap to expand
+- Goal: daily discussion hotspots without engagement farming
+
 ## Ambient Noise Levels (0–5)
 - 0: your feed only (people you follow)
 - 1: mutuals of mutuals

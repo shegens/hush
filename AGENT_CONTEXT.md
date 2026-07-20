@@ -85,5 +85,11 @@ Lens Protocol (ZKsync L2). `HushFeedRule.sol` ready for deployment. Gas sponsore
 - [ ] Real feed pagination
 - [ ] Profile photos
 - [ ] Notifications page
-- [ ] DMs ("whispers"?)
+- [ ] **Whisper** — E2E encrypted DMs via XMTP
+  - `@xmtp/browser-sdk`, keys derived from Para wallet signature
+  - No backend needed for message relay (XMTP network handles it)
+  - No push notifications (by design)
+  - Consent model TBD (mutuals only? tuned-in only? open?)
+  - Key persistence via localStorage or encrypted DB
+  - Later rollout, after core platform is solid
 - [ ] Lens mainnet deployment (future v2)

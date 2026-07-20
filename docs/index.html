@@ -593,7 +593,7 @@
       <input class="search-input" id="search-input" type="text" placeholder="find someone…" oninput="runSearch(this.value)" autocomplete="off">
       <div class="search-results" id="search-results"></div>
     </div>
-    <div class="avatar"></div>
+    <div class="avatar">you</div>
   </div>
 </nav>
 
@@ -626,7 +626,7 @@
 <div class="sheet-overlay" id="overlay" onclick="closeSheet()"></div>
 <div class="sheet" id="sheet">
   <div class="sheet-handle"></div>
-  <textarea id="compose-input" placeholder="" maxlength="999" oninput="updateCount()"></textarea>
+  <textarea id="compose-input" placeholder="Say something worth waiting for…" maxlength="999" oninput="updateCount()"></textarea>
   <div class="sheet-footer">
     <span class="char-count" id="char-count">999</span>
     <button class="submit-btn" onclick="submitPost()">post</button>
